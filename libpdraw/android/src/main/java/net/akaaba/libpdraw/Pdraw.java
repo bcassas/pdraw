@@ -44,9 +44,6 @@ import com.parrot.mux.Mux;
 
 import java.nio.ByteBuffer;
 
-import static android.R.attr.height;
-import static android.R.attr.width;
-
 public class Pdraw {
     private static final String LIBRARY_NAME = "pdraw_android";
     private long pdrawCtx;
@@ -262,7 +259,13 @@ public class Pdraw {
         if (!isValid()) {
             throw new RuntimeException("invalid pdraw instance");
         }
+        if (mListener != null) {
+            nativeUnregisterListener(pdrawCtx);
+        }
         nativeSeekTo(pdrawCtx, timestamp);
+        if (mListener != null) {
+            nativeRegisterListener(pdrawCtx);
+        }
     }
 
     public void seekForward(long delta) {
